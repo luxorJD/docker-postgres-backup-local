@@ -102,9 +102,9 @@ for DB in ${POSTGRES_DBS}; do
     MFILENEW="${MFILE}-new"
     rm -rf "${DFILENEW}" "${WFILENEW}" "${MFILENEW}"
     mkdir "${DFILENEW}" "${WFILENEW}" "${MFILENEW}"
-    ln -f "${FILE}/"* "${DFILENEW}/"
-    ln -f "${FILE}/"* "${WFILENEW}/"
-    ln -f "${FILE}/"* "${MFILENEW}/"
+    cp "${FILE}/"* "${DFILENEW}/"
+    cp "${FILE}/"* "${WFILENEW}/"
+    cp "${FILE}/"* "${MFILENEW}/"
     rm -rf "${DFILE}" "${WFILE}" "${MFILE}"
     echo "Replacing daily backup ${DFILE} folder this last backup..."
     mv "${DFILENEW}" "${DFILE}"
@@ -114,21 +114,12 @@ for DB in ${POSTGRES_DBS}; do
     mv "${MFILENEW}" "${MFILE}"
   else
     echo "Replacing daily backup ${DFILE} file this last backup..."
-    ln -vf "${FILE}" "${DFILE}"
+    cp -f "${FILE}" "${DFILE}"
     echo "Replacing weekly backup ${WFILE} file this last backup..."
-    ln -vf "${FILE}" "${WFILE}"
+    cp -f "${FILE}" "${WFILE}"
     echo "Replacing monthly backup ${MFILE} file this last backup..."
-    ln -vf "${FILE}" "${MFILE}"
+    cp -f "${FILE}" "${MFILE}"
   fi
-  # Update latest symlinks
-  echo "Point last backup file to this last backup..."
-  ln -svf "${LAST_FILENAME}" "${BACKUP_DIR}/last/${DB}-latest${BACKUP_SUFFIX}"
-  echo "Point latest daily backup to this last backup..."
-  ln -svf "${DAILY_FILENAME}" "${BACKUP_DIR}/daily/${DB}-latest${BACKUP_SUFFIX}"
-  echo "Point latest weekly backup to this last backup..."
-  ln -svf "${WEEKLY_FILENAME}" "${BACKUP_DIR}/weekly/${DB}-latest${BACKUP_SUFFIX}"
-  echo "Point latest monthly backup to this last backup..."
-  ln -svf "${MONTHY_FILENAME}" "${BACKUP_DIR}/monthly/${DB}-latest${BACKUP_SUFFIX}"
   #Clean old files
   echo "Cleaning older files for ${DB} database from ${POSTGRES_HOST}..."
   find "${BACKUP_DIR}/last" -maxdepth 1 -mmin "+${KEEP_MINS}" -name "${DB}-*${BACKUP_SUFFIX}" -exec rm -rvf '{}' ';'
