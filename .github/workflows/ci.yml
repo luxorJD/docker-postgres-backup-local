@@ -144,7 +144,7 @@ jobs:
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     needs: [ test-script ]
     runs-on: ubuntu-22.04
-    environment: docker.io
+    environment: ghcr.io
     steps:
       - uses: actions/checkout@v3
 
